@@ -89,3 +89,74 @@ if (contactBtn && contactModal) {
         }
     });
 }
+
+// Scroll to Top Button
+const scrollToTopBtn = document.getElementById('scrollToTop');
+
+// Show/hide button based on scroll position
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+        scrollToTopBtn.classList.add('visible');
+    } else {
+        scrollToTopBtn.classList.remove('visible');
+    }
+});
+
+// Scroll to top when button is clicked
+scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Copy Email to Clipboard
+const emailLinks = document.querySelectorAll('.email-copy');
+
+emailLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = link.getAttribute('data-email');
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(email).then(() => {
+            // Create notification toast
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 0.5rem;">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                </svg>
+                <span>Email copied to clipboard!</span>
+            `;
+            notification.style.cssText = `
+                position: fixed;
+                top: 2rem;
+                left: 50%;
+                transform: translateX(-50%) translateY(-100px);
+                background: var(--primary-color);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                font-size: 0.95rem;
+                font-weight: 500;
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                box-shadow: 0 10px 40px rgba(65, 189, 248, 0.4);
+                animation: slideDown 0.4s ease forwards;
+            `;
+
+            document.body.appendChild(notification);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideUp 0.4s ease forwards';
+                setTimeout(() => notification.remove(), 400);
+            }, 3000);
+        }).catch(err => {
+            console.error('Failed to copy email:', err);
+            // Show error notification
+            alert('Failed to copy email. Please try again.');
+        });
+    });
+});
