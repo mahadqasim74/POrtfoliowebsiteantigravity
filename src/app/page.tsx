@@ -8,6 +8,8 @@ import { ProjectsSection } from '@/components/ProjectsSection'
 import { PublicationsSection } from '@/components/PublicationsSection'
 import { ContactSection } from '@/components/ContactSection'
 
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-900">
