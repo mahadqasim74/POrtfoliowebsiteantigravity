@@ -6,15 +6,27 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
+                username: { label: "Username", type: "text", placeholder: "admin" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                const adminPassword = process.env.ADMIN_PASSWORD
+                console.log("Authorize called with credentials:", credentials?.username);
+                console.log("Admin password env:", process.env.ADMIN_PASSWORD ? "Set" : "Not Set");
 
-                if (credentials?.password === adminPassword) {
+                if (!credentials?.username || !credentials?.password) {
+                    console.log("Missing credentials");
+                    return null
+                }
+
+                if (
+                    credentials.username === "admin" &&
+                    credentials.password === process.env.ADMIN_PASSWORD
+                ) {
+                    console.log("Credentials match, returning user");
                     return { id: "1", name: "Admin", email: "admin@example.com" }
                 }
 
+                console.log("Invalid credentials");
                 return null
             }
         })
